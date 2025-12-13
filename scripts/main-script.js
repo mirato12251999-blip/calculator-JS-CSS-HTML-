@@ -1,8 +1,7 @@
 const display = document.getElementsByClassName("keyboards")[0];
 var standardkeys = [];
 let operations;
-let num1, num2;
-let temp = 0;
+let num1 = 0, num2 = 0;
 
 /**
  * application: display the keys on the screen
@@ -61,8 +60,8 @@ window.onload = () => {
 
 function displayOrOperate(type, value) {
     if (type === "number") {
-        temp = 10 * temp + Number(value);
-        document.getElementsByClassName("number")[0].value = temp;
+        num1 = 10 * num1 + Number(value);
+        document.getElementsByClassName("number")[0].value = num1;
     }
 
     else if (type === "delete") deleteNumber(value);
@@ -74,30 +73,51 @@ function displayOrOperate(type, value) {
 
 /**
  * application: calculate two numbers according to the operator 
- * or push the operators in the operator temp named "operations"
+ * or push the operators in the operator num1 named "operations"
  * dev: ToBBi
  * date: 2025.12.02
  */
 
 function operationKeyPush(operator) {
     if (!!operations) {
-        num2 = temp;
+        num2 = num1;
         calculate(operator);
     }
 
     else {
-        num1 = temp;
+        num1 = num1;
         operations = operator;
     }
 
-    temp = 0;
-    document.getElementsByClassName("number")[0].value = "";
+    num1 = 0;
 }
 
 function calculate(operator) {
     switch (operations) {
+        case "+": {
+            num1 = num1 + num2;
+            break;
+        }
+
+        case "-": {
+            num1 = num1 - num2;
+            break;
+        }
+
+        case "*": {
+            num1 = num1 * num2;
+            break;
+        }
+
+        case "/": {
+            num1 = num1 / num2;
+            break;
+        }
 
     }
+
+    document.getElementsByClassName("number")[0].value = num1;
+    operations = operator === "=" ? "" : operator;
 }
 
 /**
@@ -111,20 +131,27 @@ function deleteNumber(value) {
         case "C": {
             num1 = num2 = 0;
             operations = "";
-            temp = 0;
+            num1 = 0;
         }
             break;
 
         case "CE": {
-            temp = 0
+            num1 = 0
         }
             break;
 
         default: {
-            temp = Math.floor(temp / 10);
+            num1 = Math.floor(num1 / 10);
         }
             break;
     }
 
-    document.getElementsByClassName("number")[0].value = temp;
+    document.getElementsByClassName("number")[0].value = num1;
+}
+
+function resetCalculator() {
+    num1 = num2 = 0;
+    operations = "";
+    num1 = 0;
+    document.getElementsByClassName("number")[0].value = "";
 }
