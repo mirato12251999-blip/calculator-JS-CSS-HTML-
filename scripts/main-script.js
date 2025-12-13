@@ -123,7 +123,6 @@ function deleteNumber(value) {
         default: {
             temp = Math.floor(temp / 10);
         }
-
             break;
     }
 
