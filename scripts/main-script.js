@@ -2,6 +2,7 @@ const display = document.getElementsByClassName("keyboards")[0];
 var standardkeys = [];
 let operations;
 let num1 = 0, num2 = 0;
+let temp = 0;
 
 /**
  * application: display the keys on the screen
@@ -52,106 +53,40 @@ window.onload = () => {
 };
 
 
-/**
- * application: display numbers in the input field
- * dev: ToBBi
- * date: 2025.12.01
- */
-
 function displayOrOperate(type, value) {
-    if (type === "number") {
-        num1 = 10 * num1 + Number(value);
-        document.getElementsByClassName("number")[0].value = num1;
-    }
-
-    else if (type === "delete") deleteNumber(value);
-
-    else {
-        operationKeyPush(value);
+    switch (type) {
+        case "number": {
+            if (operations) {
+                displayResult(value);
+            } else {
+                temp = temp * 10 + Number(value);
+                updateDisplay(temp);
+            }
+        }
+            break;
+        case "operation": {
+            if (operations) {
+                calculate(num1, temp, operations);
+            } else {
+                num1 = temp;
+                operations = value;
+                temp = 0;
+            }
+        }
+            break;
+        case "equal": {
+            if (operations) {
+                calculate(num1, temp, operations);
+                operations = null;
+            }
+        }
+            break;
+        default:
+            console.error("Unknown type:", type);
     }
 }
 
-/**
- * application: calculate two numbers according to the operator 
- * or push the operators in the operator num1 named "operations"
- * dev: ToBBi
- * date: 2025.12.02
- */
-
-function operationKeyPush(operator) {
-    if (!!operations) {
-        num2 = num1;
-        calculate(operator);
-    }
-
-    else {
-        num1 = num1;
-        operations = operator;
-    }
-
-    num1 = 0;
-}
-
-function calculate(operator) {
-    switch (operations) {
-        case "+": {
-            num1 = num1 + num2;
-            break;
-        }
-
-        case "-": {
-            num1 = num1 - num2;
-            break;
-        }
-
-        case "*": {
-            num1 = num1 * num2;
-            break;
-        }
-
-        case "/": {
-            num1 = num1 / num2;
-            break;
-        }
-
-    }
-
-    document.getElementsByClassName("number")[0].value = num1;
-    operations = operator === "=" ? "" : operator;
-}
-
-/**
- * application: delete or change the number in the input field
- * dev: ToBBi
- * date: 2025.12.02
- */
-
-function deleteNumber(value) {
-    switch (value) {
-        case "C": {
-            num1 = num2 = 0;
-            operations = "";
-            num1 = 0;
-        }
-            break;
-
-        case "CE": {
-            num1 = 0
-        }
-            break;
-
-        default: {
-            num1 = Math.floor(num1 / 10);
-        }
-            break;
-    }
-
-    document.getElementsByClassName("number")[0].value = num1;
-}
-
-function resetCalculator() {
-    num1 = num2 = 0;
-    operations = "";
-    num1 = 0;
-    document.getElementsByClassName("number")[0].value = "";
+function updateDisplay(value) {
+    const displayElement = document.getElementsByClassName("number")[0];
+    displayElement.innerText = value;
 }
