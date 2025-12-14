@@ -56,16 +56,15 @@ window.onload = () => {
 function displayOrOperate(type, value) {
     switch (type) {
         case "number": {
-            if (operations) {
-                displayResult(value);
-            } else {
-                temp = temp * 10 + Number(value);
-                updateDisplay(temp);
+            if (!!operations) {
+                num1 = temp;
             }
+            temp = Number(value) + 10 * temp;
+            updateDisplay(temp);
         }
             break;
         case "operation": {
-            if (operations) {
+            if (!!operations) {
                 calculate(num1, temp, operations);
             } else {
                 num1 = temp;
@@ -75,7 +74,7 @@ function displayOrOperate(type, value) {
         }
             break;
         case "equal": {
-            if (operations) {
+            if (!!operations) {
                 calculate(num1, temp, operations);
                 operations = null;
             }
@@ -87,6 +86,33 @@ function displayOrOperate(type, value) {
 }
 
 function updateDisplay(value) {
+    console.log("Update Display:", value);
     const displayElement = document.getElementsByClassName("number")[0];
-    displayElement.innerText = value;
+    displayElement.value = value;
+}
+
+function calculate(n1, n2, operation) {
+    let result = 0;
+    switch (operation) {
+        case "+":
+            result = n1 + n2;
+            break;
+        case "-":
+            result = n1 - n2;
+            break;
+        case "*":
+            result = n1 * n2;
+            break;
+        case "/":
+            result = n1 / n2;
+            break;
+        default:
+            console.error("Unknown operation:", operation);
+            return;
+    }
+    temp = result;
+    updateDisplay(result);
+    num1 = 0;
+    operations = null;
+    temp = 0;
 }
